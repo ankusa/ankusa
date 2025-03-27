@@ -1,104 +1,126 @@
 #!/bin/bash
 
-# Update system
-sudo apt update && sudo apt upgrade -y
+echo "Updating system..."
+apt update && apt upgrade -y
 
-# Install dependencies
-sudo apt install curl sudo nano -y
+echo "Installing required packages..."
+apt install -y curl sudo nano jq
 
-# === Install AdGuard Home ===
+# Uninstall AdGuard Home if it exists
+if [ -d "/opt/AdGuardHome" ]; then
+    echo "Removing existing AdGuard Home installation..."
+    sudo /opt/AdGuardHome/AdGuardHome -s stop
+    sudo /opt/AdGuardHome/AdGuardHome -s uninstall
+    rm -rf /opt/AdGuardHome
+fi
+
+# Install AdGuard Home
 echo "Installing AdGuard Home..."
-curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v
+curl -sSL https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | bash
 
-# === Install Cloudflared ===
+# Wait for AdGuard Home setup completion
+sleep 10
+echo "AdGuard Home installation complete."
+
+# Install Cloudflared
 echo "Installing Cloudflared..."
+mkdir -p /usr/local/bin
+curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -o /usr/local/bin/cloudflared
+chmod +x /usr/local/bin/cloudflared
 
-# Detect architecture and download appropriate binary
-ARCH=$(uname -m)
-if [[ $ARCH == "aarch64" ]]; then
-    CLOUDFARED_BIN="cloudflared-linux-arm64"
-elif [[ $ARCH == "armv7l" ]]; then
-    CLOUDFARED_BIN="cloudflared-linux-arm"
-else
-    echo "Unsupported architecture: $ARCH"
+# Wait for Cloudflare login (5 minutes)
+echo "Waiting for 5 minutes to log in to Cloudflare..."
+sleep 300  # 5-minute wait
+
+# Check if login was successful
+if [ ! -f "/root/.cloudflared/cert.pem" ]; then
+    echo "Cloudflared login not detected. Waiting for another 10 minutes..."
+    sleep 600  # 10-minute wait
+fi
+
+# Attempt login again
+if [ ! -f "/root/.cloudflared/cert.pem" ]; then
+    echo "Cloudflared login failed. Please check your credentials and manually log in."
     exit 1
 fi
 
-curl -fsSL "https://github.com/cloudflare/cloudflared/releases/latest/download/$CLOUDFARED_BIN" -o cloudflared
-sudo mv cloudflared /usr/local/bin/cloudflared
-sudo chmod +x /usr/local/bin/cloudflared
-
-# Verify Cloudflared installation
-cloudflared --version
-
-# Authenticate with Cloudflare
 echo "Logging into Cloudflare..."
 cloudflared tunnel login
 
-# Check if the tunnel already exists
-EXISTING_TUNNEL=$(cloudflared tunnel list | grep -w "home" | awk '{print $1}')
-if [[ -n "$EXISTING_TUNNEL" ]]; then
-    echo "Existing tunnel 'home' found. Deleting..."
-    cloudflared tunnel delete home
+# Cloudflare API Credentials
+CF_EMAIL="webmaster.ankush@gmail.com"
+CF_API_KEY="NraSS1porJ6iFYaiHv9-5XgH1FNbcGbWttu1Vcq1"
+CF_ZONE_ID="e49bd77e68f65f3b50dad5f518b012ae"
+DOMAIN="home.cheapgeeky.com"
+
+# Delete existing Cloudflare tunnel
+echo "Checking for existing tunnels..."
+EXISTING_TUNNEL_ID=$(cloudflared tunnel list | grep "home" | awk '{print $1}')
+if [ -n "$EXISTING_TUNNEL_ID" ]; then
+    echo "Deleting existing tunnel: $EXISTING_TUNNEL_ID"
+    cloudflared tunnel delete "$EXISTING_TUNNEL_ID"
 fi
 
-# Create a new tunnel
-echo "Creating Cloudflare tunnel..."
+# Delete existing DNS record (via Cloudflare API)
+echo "Checking for existing DNS record..."
+RECORD_ID=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records?name=$DOMAIN" \
+    -H "X-Auth-Email: $CF_EMAIL" \
+    -H "X-Auth-Key: $CF_API_KEY" \
+    -H "Content-Type: application/json" | jq -r '.result[0].id')
+
+if [ "$RECORD_ID" != "null" ]; then
+    echo "Deleting DNS record: $RECORD_ID"
+    curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records/$RECORD_ID" \
+        -H "X-Auth-Email: $CF_EMAIL" \
+        -H "X-Auth-Key: $CF_API_KEY" \
+        -H "Content-Type: application/json"
+fi
+
+# Creating Cloudflare tunnel
+echo "Creating new Cloudflare tunnel..."
 cloudflared tunnel create home
 
-# Route DNS, but first delete the existing DNS route if it exists
-EXISTING_DNS=$(cloudflared tunnel route dns | grep -w "home.cheapgeeky.com")
-if [[ -n "$EXISTING_DNS" ]]; then
-    echo "Existing DNS route for home.cheapgeeky.com found. Deleting..."
-    cloudflared tunnel route dns delete home.cheapgeeky.com
+# Get new tunnel ID
+TUNNEL_ID=$(cloudflared tunnel list | grep "home" | awk '{print $1}')
+if [ -z "$TUNNEL_ID" ]; then
+    echo "Failed to create Cloudflare tunnel."
+    exit 1
 fi
 
-echo "Routing Cloudflare tunnel to home.cheapgeeky.com..."
-cloudflared tunnel route dns home home.cheapgeeky.com
-
-# Get the new Tunnel ID
-TUNNEL_ID=$(cloudflared tunnel list | grep home | awk '{print $1}')
-
-# Create Cloudflared config file
+# Configure Cloudflared
 echo "Configuring Cloudflared..."
-sudo mkdir -p /etc/cloudflared
-sudo tee /etc/cloudflared/config.yml > /dev/null <<EOL
+mkdir -p /etc/cloudflared
+cat <<EOF > /etc/cloudflared/config.yml
 tunnel: $TUNNEL_ID
-credentials-file: /root/.cloudflared/$TUNNEL_ID.json
-
+credentials-file: /root/.cloudflared/cert.pem
 ingress:
-  - hostname: home.cheapgeeky.com
-    service: http://198.168.29.3:80
+  - hostname: $DOMAIN
+    service: http://192.168.29.3:80
   - service: http_status:404
-EOL
+EOF
 
-# Create Cloudflared systemd service
+# Routing the domain
+echo "Routing Cloudflare tunnel to $DOMAIN..."
+cloudflared tunnel route dns "$TUNNEL_ID" "$DOMAIN"
+
+# Setting up Cloudflared service
 echo "Setting up Cloudflared as a service..."
-sudo tee /etc/systemd/system/cloudflared.service > /dev/null <<EOL
+cat <<EOF > /etc/systemd/system/cloudflared.service
 [Unit]
 Description=Cloudflare Tunnel
 After=network.target
 
 [Service]
-Type=simple
 Restart=always
 ExecStart=/usr/local/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run
 
 [Install]
 WantedBy=multi-user.target
-EOL
+EOF
 
 # Enable and start Cloudflared service
-sudo systemctl daemon-reload
-sudo systemctl enable cloudflared
-sudo systemctl restart cloudflared
+systemctl enable cloudflared
+systemctl start cloudflared
 
-# Restart DietPi services
-dietpi-services restart
-
-# Check service status
-echo "Checking Cloudflared status..."
-sudo systemctl status cloudflared --no-pager
-
-# Display success message
-echo "Installation complete! AdGuard Home and Cloudflare Tunnel are now running."
+echo "✅ Cloudflared setup complete."
+echo "✅ Installation finished! AdGuard Home and Cloudflare Tunnel are now running."
