@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Cloudflare API Credentials
-CF_EMAIL="webmaster.ankush@gmail.com"
-CF_API_KEY="NraSS1porJ6iFYaiHv9-5XgH1FNbcGbWttu1Vcq1"
-CF_ZONE_ID="e49bd77e68f65f3b50dad5f518b012ae"
+# Cloudflare API Credentials (Move these to environment variables for security)
+CF_EMAIL="${CF_EMAIL}"
+CF_API_KEY="${CF_API_KEY}"
+CF_ZONE_ID="${CF_ZONE_ID}"
 DOMAIN="home.cheapgeeky.com"
 TUNNEL_NAME="home"
 
@@ -11,7 +11,20 @@ echo "Updating system..."
 apt update && apt upgrade -y
 
 echo "Installing required packages..."
-apt install -y curl sudo nano
+apt install -y curl sudo nano jq
+
+# Detect system architecture
+ARCH=$(uname -m)
+if [[ "$ARCH" == "x86_64" ]]; then
+    CLOUD_FILE="cloudflared-linux-amd64"
+elif [[ "$ARCH" == "aarch64" ]]; then
+    CLOUD_FILE="cloudflared-linux-arm64"
+elif [[ "$ARCH" == "armv7l" ]]; then
+    CLOUD_FILE="cloudflared-linux-arm"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
 
 # Uninstall AdGuard Home if it exists
 if [ -d "/opt/AdGuardHome" ]; then
@@ -30,23 +43,23 @@ echo "AdGuard Home installation complete."
 # Install Cloudflared
 echo "Installing Cloudflared..."
 mkdir -p /usr/local/bin
-curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /usr/local/bin/cloudflared
+curl -fsSL "https://github.com/cloudflare/cloudflared/releases/latest/download/$CLOUD_FILE" -o /usr/local/bin/cloudflared
 chmod +x /usr/local/bin/cloudflared
 
 # Start Cloudflare login process
 echo "Please log in to Cloudflare. Follow the link below:"
 cloudflared tunnel login &
 
-# Wait for user login (5 minutes)
-sleep 300
+# Wait for Cloudflare login (check every 10 seconds, max 5 minutes)
+echo "Waiting for Cloudflared login..."
+for i in {1..30}; do
+    if [ -f "/root/.cloudflared/cert.pem" ]; then
+        echo "Cloudflared login detected."
+        break
+    fi
+    sleep 10
+done
 
-# If login not detected, wait another 10 minutes
-if [ ! -f "/root/.cloudflared/cert.pem" ]; then
-    echo "Cloudflared login not detected. Waiting another 10 minutes..."
-    sleep 600
-fi
-
-# If still not logged in, exit
 if [ ! -f "/root/.cloudflared/cert.pem" ]; then
     echo "Cloudflare login failed. Please check and log in manually."
     exit 1
@@ -54,15 +67,14 @@ fi
 
 echo "Login successful. Proceeding..."
 
-# Get existing tunnel ID (if any)
+# Get existing tunnel ID
 EXISTING_TUNNEL_ID=$(cloudflared tunnel list | grep "$TUNNEL_NAME" | awk '{print $1}')
 if [ -n "$EXISTING_TUNNEL_ID" ]; then
     echo "Deleting existing Cloudflare tunnel: $EXISTING_TUNNEL_ID"
     cloudflared tunnel delete "$EXISTING_TUNNEL_ID"
 fi
 
-# Delete DNS record via API
-echo "Deleting existing DNS record for $DOMAIN..."
+# Delete existing DNS record
 EXISTING_DNS_ID=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records?name=$DOMAIN" \
     -H "X-Auth-Email: $CF_EMAIL" \
     -H "X-Auth-Key: $CF_API_KEY" \
@@ -99,7 +111,7 @@ ingress:
   - service: http_status:404
 EOF
 
-# Create new DNS record via API
+# Create new DNS record
 echo "Creating new DNS record for $DOMAIN..."
 curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records" \
     -H "X-Auth-Email: $CF_EMAIL" \
@@ -114,7 +126,7 @@ curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_reco
     }'
 echo "New DNS record created."
 
-# Setting up Cloudflared service
+# Setting up Cloudflared as a system service
 echo "Setting up Cloudflared as a system service..."
 cat <<EOF > /etc/systemd/system/cloudflared.service
 [Unit]
@@ -123,6 +135,7 @@ After=network.target
 
 [Service]
 Restart=always
+RestartSec=10
 ExecStart=/usr/local/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run
 
 [Install]
