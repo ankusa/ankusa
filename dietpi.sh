@@ -60,23 +60,14 @@ echo "✅ AdGuard Home installed."
 # Fetch Cloudflare Tunnel certificate if not present
 if [ ! -f "$CERT_PATH" ]; then
     echo "🔑 Fetching Cloudflare Tunnel certificate..."
-    curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/cfd_tunnel_cert" \
-        -H "X-Auth-Email: $CF_EMAIL" \
-        -H "X-Auth-Key: $CF_API_KEY" \
-        -H "Content-Type: application/json" \
-        --output "$CERT_PATH"
-
-    chmod 600 "$CERT_PATH"
+    cloudflared tunnel login
     if [ ! -f "$CERT_PATH" ]; then
-        echo "❌ Failed to fetch the certificate. Check API credentials."
+        echo "❌ Failed to fetch Cloudflare Tunnel certificate. Check API credentials or retry login."
         exit 1
     fi
-fi
-
-# Cloudflare login (if not logged in)
-if ! cloudflared tunnel list &> /dev/null; then
-    echo "🔑 Please log in to Cloudflare. Follow the link below:"
-    cloudflared tunnel login
+    echo "✅ Cloudflare Tunnel certificate fetched successfully."
+else
+    echo "✅ Cloudflare Tunnel certificate already exists. Skipping login."
 fi
 
 # Check if the tunnel exists, delete if needed
@@ -84,20 +75,6 @@ EXISTING_TUNNEL_ID=$(cloudflared tunnel list | grep "$TUNNEL_NAME" | awk '{print
 if [ -n "$EXISTING_TUNNEL_ID" ]; then
     echo "🗑️ Deleting existing Cloudflare tunnel: $EXISTING_TUNNEL_ID"
     cloudflared tunnel delete "$EXISTING_TUNNEL_ID"
-fi
-
-# Remove existing DNS record
-EXISTING_DNS_ID=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records?name=$DOMAIN" \
-    -H "X-Auth-Email: $CF_EMAIL" \
-    -H "X-Auth-Key: $CF_API_KEY" \
-    -H "Content-Type: application/json" | jq -r '.result[0].id')
-
-if [ "$EXISTING_DNS_ID" != "null" ]; then
-    echo "🗑️ Deleting existing DNS record..."
-    curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records/$EXISTING_DNS_ID" \
-        -H "X-Auth-Email: $CF_EMAIL" \
-        -H "X-Auth-Key: $CF_API_KEY" \
-        -H "Content-Type: application/json"
 fi
 
 # Create new Cloudflare tunnel
@@ -123,6 +100,20 @@ ingress:
   - service: http_status:404
 EOF
 
+# Remove existing DNS record
+EXISTING_DNS_ID=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records?name=$DOMAIN" \
+    -H "X-Auth-Email: $CF_EMAIL" \
+    -H "X-Auth-Key: $CF_API_KEY" \
+    -H "Content-Type: application/json" | jq -r '.result[0].id')
+
+if [ "$EXISTING_DNS_ID" != "null" ]; then
+    echo "🗑️ Deleting existing DNS record..."
+    curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records/$EXISTING_DNS_ID" \
+        -H "X-Auth-Email: $CF_EMAIL" \
+        -H "X-Auth-Key: $CF_API_KEY" \
+        -H "Content-Type: application/json"
+fi
+
 # Create new DNS record
 echo "🌐 Creating new DNS record for $DOMAIN..."
 curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records" \
@@ -132,7 +123,7 @@ curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_reco
     --data '{
         "type": "CNAME",
         "name": "'"$DOMAIN"'",
-        "content": "'"$TUNNEL_ID".cfargotunnel.com",
+        "content": "'"$TUNNEL_ID"'.cfargotunnel.com",
         "ttl": 1,
         "proxied": true
     }'
