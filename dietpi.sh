@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Load Cloudflare API credentials
+if [ -f /root/cloudflare.env ]; then
+    export $(grep -v '^#' /root/cloudflare.env | xargs)
+else
+    echo "Error: /root/cloudflare.env file not found!"
+    exit 1
+fi
+
 # Cloudflare API Credentials (Move these to environment variables for security)
 CF_EMAIL="${CF_EMAIL}"
 CF_API_KEY="${CF_API_KEY}"
