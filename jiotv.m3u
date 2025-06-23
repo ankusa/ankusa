@@ -5,52 +5,18 @@ http://192.168.29.2/JioTv/live.php?id=144&token=JITENDRA_KUMAR&e=.m3u8
 http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105531/ZeeTVHDMSLELE/index-connected.m3u8
 #EXTINF:-1 tvg-id="1000009246" tvg-logo="https://sonypicturesnetworks.com/images/logos/SET-LOGO-HD.png" group-title="SonyLiv", SET HD
 https://dai.google.com/ssai/event/HgaB-u6rSpGx3mo4Xu3sLw/master.m3u8
-#EXTINF:-1 tvg-id="291" tvg-name="SET HD" tvg-type="Entertainment" group-title="Entertainment" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_HD.png",SET HD
-http://192.168.29.2/JioTv/live.php?id=291&token=JITENDRA_KUMAR&e=.m3u8
 #EXTINF:-1 tvg-id="1000009248" tvg-logo="https://sonypicturesnetworks.com/images/logos/SONY%20SAB%20HD_WHITE.png" group-title="SonyLiv", Sony SAB HD
 https://dai.google.com/ssai/event/UI4QFJ_uRk6aLxIcADqa_A/master.m3u8
 #EXTINF:-1 tvg-id="0-9-tvhd_0" tvg-name="&TV HD" tvg-type="Entertainment" group-title="Entertainment" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-tvhd_0/cover/1920x7702020794400",&TV HD
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105504/AndTVHDELE/index-connected.m3u8
-#EXTINF:-1 tvg-id="471" tvg-name="Sony SAB HD" tvg-type="Entertainment" group-title="Entertainment" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_SAB_HD.png",Sony SAB HD
-http://192.168.29.2/JioTv/live.php?id=471&token=JITENDRA_KUMAR&e=.m3u8
+http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105504/AndTVHDELE/index-connected.m3u8.
 #EXTINF:-1 tvg-id="1000009249" tvg-logo="https://sonypicturesnetworks.com/images/logos/Sony_MAX.png" group-title="SonyLiv", Sony MAX
 https://dai.google.com/ssai/event/oJ-TGgVFSgSMBUoTkauvFQ/master.m3u8
 #EXTINF:-1 tvg-id="1000009247" tvg-logo="https://sonypicturesnetworks.com/images/logos/Sony_MAX-HD_WHITE.png" group-title="SonyLiv", Sony MAX HD
 https://dai.google.com/ssai/event/Qyqz40bSQriqSuAC7R8_Fw/master.m3u8
 #EXTINF:-1 tvg-id="1000044878" tvg-logo="https://sonypicturesnetworks.com/images/logos/Sony_MAX2.png" group-title="SonyLiv", Sony MAX2
 https://dai.google.com/ssai/event/4Jcu195QTpCNBXGnpw2I6g/master.m3u8
-#EXTINF:-1 tvg-id="476" tvg-name="Sony Max HD" tvg-type="Movies" group-title="Movies" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Max_HD.png",Sony Max HD
-http://192.168.29.2/JioTv/live.php?id=476&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="477" tvg-name="MN+ HD" tvg-type="Movies" group-title="Movies" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/MNPLUS.png",MN+ HD
-http://192.168.29.2/JioTv/live.php?id=477&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="0-9-209" tvg-name="&xplorHD" tvg-type="Movies" group-title="Movies" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-209/cover/1920x770269323586",&xplorHD
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105553/AndxploreHDELE/index-connected.m3u8
-#EXTINF:-1 tvg-id="0-9-9z5543514" tvg-name="&Prive HD" tvg-type="Movies" group-title="Movies" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-9z5543514/cover/1920x77013956063891cd580b48d744982abe72ded613c89bd",&Prive HD
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2104969/AndPriveHDELENEW/index-connected.m3u8
-#EXTINF:-1 tvg-id="0-9-tvpictureshd" tvg-name="&Pictures HD" tvg-type="Movies" group-title="Movies" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-tvpictureshd/cover/1920x7701379814372",&Pictures HD
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105174/ANDPicturesHDELE/index-connected.m3u8
-#EXTINF:-1 tvg-id="0-9-pictures" tvg-name="&Pictures" tvg-type="Movies" group-title="Movies" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-pictures/cover/1920x7701436746315",&Pictures
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105528/ANDPicturesELE/master.m3u8
-#EXTINF:-1 tvg-id="0-9-channel_2105335046" tvg-name="&flix HD" tvg-type="Movies" group-title="Movies" tvg-logo="https://akamaividz2.zee5.com/image/upload/w_396,h_224,c_scale,f_webp,q_auto:eco/resources/0-9-channel_2105335046/cover/1920x7701912061484",&flix HD
-http://192.168.29.2/JioTv/live.php?token=JITENDRA_KUMAR&id=https://z5ak-cmaflive.zee5.com/cmaf/live/2105517/AndFlixHDELE/index-connected.m3u8
 #EXTINF:-1 tvg-id="1000009258" tvg-logo="https://sonypicturesnetworks.com/images/logos/PIX%20HD_WHITE.png" group-title="SonyLiv", Sony PIX HD
 https://dai.google.com/ssai/event/8FR5Q-WfRWCkbMq_GxZ77w/master.m3u8
-#EXTINF:-1 tvg-id="877" tvg-name="MNX HD" tvg-type="Movies" group-title="Movies" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Movies_Now2_HD.png",MNX HD
-http://192.168.29.2/JioTv/live.php?id=877&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="151" tvg-name="Movies Now HD" tvg-type="Movies" group-title="Movies" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Movies_Now_HD.png",Movies Now HD
-http://192.168.29.2/JioTv/live.php?id=151&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="545" tvg-name="Nick Hindi" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Nick_Hindi.png",Nick Hindi
-http://192.168.29.2/JioTv/live.php?id=545&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="554" tvg-name="Discovery Kids 2" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Discovery_Kids_2.png",Discovery Kids 2
-http://192.168.29.2/JioTv/live.php?id=554&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="559" tvg-name="Pogo Hindi" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Pogo_Hindi.png",Pogo Hindi
-http://192.168.29.2/JioTv/live.php?id=559&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="815" tvg-name="Sonic Hindi" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/sonic_Hindi.png",Sonic Hindi
-http://192.168.29.2/JioTv/live.php?id=815&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="816" tvg-name="Cartoon Network Hindi" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Cartoon_Network_Hindi.png",Cartoon Network Hindi
-http://192.168.29.2/JioTv/live.php?id=816&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="872" tvg-name="Sony Yay Hindi" tvg-type="Kids" group-title="Kids" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Yay_Hindi.png",Sony Yay Hindi
-http://192.168.29.2/JioTv/live.php?id=872&token=JITENDRA_KUMAR&e=.m3u8
 #EXTINF:-1 tvg-id="1000009276" tvg-logo="https://sonypicturesnetworks.com/images/logos/SONY_SportsTen1_HD_Logo_CLR.png" group-title="SonyLiv", Sony TEN 1 HD
 https://dai.google.com/ssai/event/yeYP86THQ4yl7US8Zx5eug/master.m3u8
 #EXTINF:-1 tvg-id="1000009277" tvg-logo="https://sonypicturesnetworks.com/images/logos/SONY_SportsTen2_HD_Logo_CLR.png" group-title="SonyLiv", Sony TEN 2 HD
@@ -61,22 +27,6 @@ https://dai.google.com/ssai/event/nmQFuHURTYGQBNdUG-2Qdw/master.m3u8
 https://dai.google.com/ssai/event/x4LxWUcVSIiDaq1VCM7DSA/master.m3u8
 #EXTINF:-1 tvg-id="1000009275" tvg-logo="https://sonypicturesnetworks.com/images/logos/SONY_SportsTen5_HD_Logo_CLR.png" group-title="SonyLiv", Sony TEN 5 HD
 https://dai.google.com/ssai/event/DD7fA-HgSUaLyZp9AjRYxQ/master.m3u8
-#EXTINF:-1 tvg-id="155" tvg-name="Sony Ten 5 HD" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Six_HD.png",Sony Ten 5 HD
-http://192.168.29.2/JioTv/live.php?id=155&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="524" tvg-name="Sony Ten 3 Hindi" tvg-type="Sports" group-title="Sports" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_3.png",Sony Ten 3 Hindi
-http://192.168.29.2/JioTv/live.php?id=524&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="525" tvg-name="Sony Ten 5" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Six_SD.png",Sony Ten 5
-http://192.168.29.2/JioTv/live.php?id=525&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="162" tvg-name="Sony Ten 1 HD" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten_HD.png",Sony Ten 1 HD
-http://192.168.29.2/JioTv/live.php?id=162&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="891" tvg-name="Sony Ten 2 HD" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten2_HD.png",Sony Ten 2 HD
-http://192.168.29.2/JioTv/live.php?id=891&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="892" tvg-name="Sony Ten 3 HD Hindi" tvg-type="Sports" group-title="Sports" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Ten3_HD.png",Sony Ten 3 HD Hindi
-http://192.168.29.2/JioTv/live.php?id=892&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="1984" tvg-name="Star Sports 2 Hindi HD" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sports18_1_HD.png",Star Sports 2 Hindi HD
-http://192.168.29.2/JioTv/live.php?id=1984&token=JITENDRA_KUMAR&e=.m3u8
-#EXTINF:-1 tvg-id="1985" tvg-name="Star Sports 2 Hindi" tvg-type="Sports" group-title="Sports" tvg-language="English" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sports18_1_SD.png",Star Sports 2 Hindi
-http://192.168.29.2/JioTv/live.php?id=1985&token=JITENDRA_KUMAR&e=.m3u8
 #EXTINF:-1 tvg-id="1998" tvg-name="Star Sports Khel" tvg-type="Sports" group-title="Sports" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sports18_Khel.png",Star Sports Khel
 http://192.168.29.2/JioTv/live.php?id=1998&token=JITENDRA_KUMAR&e=.m3u8
 #EXTINF:-1 tvg-id="203" tvg-name="DD News" tvg-type="News" group-title="News" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/DD_News.png",DD News
